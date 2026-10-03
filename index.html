@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Karya Ku SDN Ciluar 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff4dc;--card:#fff;--ink:#3b2a5a;--soft:#f1eaff;--pri:#7c4dff;--pink:#ff6fa5;--yel:#ffd23f;--teal:#2ec4b6;--mut:#7d6f99}
+@media (prefers-color-scheme:dark){:root{--bg:#1d1730;--card:#2a2142;--ink:#f4efff;--soft:#3a2f5c;--mut:#b5a8d6}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Fredoka','Comic Sans MS',system-ui,sans-serif;font-size:16px}
+header{background:linear-gradient(135deg,var(--pri),var(--pink));color:#fff;text-align:center;padding:18px 12px 14px;border-radius:0 0 28px 28px}
+header h1{margin:0;font-size:clamp(24px,6vw,36px);font-weight:600}
+header p{margin:2px 0 0}
+#who{background:rgba(255,255,255,.25);color:#fff;margin-top:8px;padding:4px 12px;font-size:14px}
+nav{display:flex;gap:8px;justify-content:center;margin:14px 10px 6px}
+button,a.btn{font:inherit;cursor:pointer;border:0;color:var(--ink);text-decoration:none}
+.tab{background:var(--card);padding:10px 18px;border-radius:20px;font-weight:600;box-shadow:0 3px 0 rgba(0,0,0,.12)}
+.tab.on{background:var(--yel);color:#3b2a5a}
+main{max-width:980px;margin:0 auto;padding:6px 12px 110px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:6px 2px 10px}
+.chip{background:var(--card);padding:6px 12px;border-radius:16px;white-space:nowrap}
+.chip.on{background:var(--teal);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.card{background:var(--card);border-radius:22px;overflow:hidden;box-shadow:0 5px 0 rgba(0,0,0,.1)}
+.prev{height:190px;background:var(--soft);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;overflow:hidden}
+.prev img{width:100%;height:100%;object-fit:cover}
+.prev .big{font-size:56px}
+.body{padding:12px 14px 14px}
+.body h3{margin:0 0 2px;font-size:19px}
+.mut{color:var(--mut);font-size:14px}
+.badge{display:inline-block;background:var(--soft);border-radius:10px;padding:2px 9px;font-size:13px;margin-right:4px}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.btn{background:var(--pri);color:#fff;padding:8px 14px;border-radius:16px;font-weight:500;display:inline-block}
+.btn.alt{background:var(--soft);color:var(--ink)}
+.btn.on{background:var(--pink);color:#fff}
+.emo{background:var(--soft);border-radius:14px;padding:4px 8px;font-size:17px}
+.emo.on{background:var(--yel)}
+.emo small{font-size:12px;margin-left:2px}
+.cm{margin-top:8px;border-top:2px dashed var(--soft);padding-top:8px}
+.cm p{margin:4px 0;font-size:15px;word-break:break-word}
+.cm b{color:var(--pri)}
+.x{background:none;font-size:12px;opacity:.6;padding:0 4px}
+input,textarea,select{font:inherit;width:100%;padding:10px 12px;border-radius:14px;border:2px solid var(--soft);background:var(--card);color:var(--ink)}
+.fab{position:fixed;right:16px;bottom:16px;background:var(--pink);color:#fff;font-size:18px;padding:14px 20px;border-radius:30px;box-shadow:0 5px 0 rgba(0,0,0,.2);z-index:5}
+.chat{background:var(--card);border-radius:22px;padding:12px;max-width:640px;margin:0 auto}
+#msgs{height:52vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:4px}
+.m{max-width:80%;background:var(--soft);padding:7px 12px;border-radius:16px;word-break:break-word}
+.m.me{align-self:flex-end;background:var(--pri);color:#fff}
+.m .n{font-size:12px;opacity:.8}
+dialog{border:0;border-radius:24px;max-width:440px;width:92%;background:var(--card);color:var(--ink);padding:18px}
+dialog::backdrop{background:rgba(40,20,80,.5)}
+dialog label{display:block;margin:10px 0 4px;font-weight:500}
+.hide{display:none}
+.empty{text-align:center;color:var(--mut);padding:30px}
+</style>
+</head>
+<body>
+<header><h1>🎨 Karya Ku</h1><p>SDN Ciluar 1 · Tempat pamer karya hebatmu! 🌟</p><button id="who"></button></header>
+<nav><button class="tab on" data-t="gal">🖼️ Galeri</button><button class="tab" data-t="chat">💬 Ngobrol</button></nav>
+<main>
+ <section id="gal"><div class="chips" id="chips"></div><div class="grid" id="grid"></div></section>
+ <section id="chat" class="hide"><div class="chat">
+  <div id="msgs"></div><div class="row" id="cemo"></div>
+  <div class="row"><input id="ci" placeholder="Tulis pesan… 😊" maxlength="300"><button class="btn" id="cs">Kirim 🚀</button></div>
+ </div></section>
+</main>
+<button class="tab fab" id="up">➕ Unggah Karya</button>
+
+<dialog id="dl">
+ <h2 style="margin:0">Halo! 👋</h2>
+ <label>Nama kamu (contoh: Sinta 5A)</label><input id="ln" maxlength="30">
+ <label>Kode kelas (tanya Bu/Pak Guru)</label><input id="lc" maxlength="30">
+ <label>PIN guru (kosongkan untuk siswa)</label><input id="lp" type="password" maxlength="30">
+ <p id="ls" class="mut"></p>
+ <button class="btn" id="lok">Masuk 🚀</button>
+</dialog>
+<dialog id="dlg">
+ <h2 style="margin:0">Unggah Karya ✨</h2>
+ <label>Judul karya</label><input id="ut" maxlength="60">
+ <label>Jenis karya</label><select id="uc"></select>
+ <label>Ceritakan sedikit (boleh kosong)</label><textarea id="ud" rows="2" maxlength="200"></textarea>
+ <label>Pilih file (maks 10 MB)</label><input type="file" id="uf" accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+ <p id="us" class="mut"></p>
+ <div class="row"><button class="btn" id="usend">Kirim 🚀</button><button class="btn alt" id="ux">Batal</button></div>
+</dialog>
+
+<script>
+/* ====== PENGATURAN: tempel URL Web App dari Apps Script di sini ====== */
+const API = 'GANTI_DENGAN_URL_WEB_APP';
+/* ===================================================================== */
+const CATS={poster:['🎨','Poster Canva'],word:['📝','Word'],excel:['📊','Excel'],ppt:['📽️','PowerPoint'],lain:['✨','Lainnya']};
+const EM=['😍','👏','🔥','⭐','😮','🎉'],CE=['😀','😂','😍','👍','🎉','❤️','🔥','🙌','🤩','😎'];
+const L=localStorage;
+const S={works:[],reacts:[],cms:[],chat:[],name:L.kk_name||'',code:L.kk_code||'',pin:L.kk_pin||'',filter:'all',open:{},draft:{},del:null,focus:null,last:''};
+const $=s=>document.querySelector(s);
+function h(t,a,...c){const e=document.createElement(t);for(const k in a||{}){const v=a[k];if(k==='class')e.className=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else if(v!==false&&v!=null)e.setAttribute(k,v)}for(const x of c.flat())if(x!=null&&x!==false)e.append(x.nodeType?x:document.createTextNode(x));return e}
+const same=(a,b)=>String(a).toLowerCase()===String(b).toLowerCase();
+const isGuru=()=>!!S.pin;
+
+async function post(body){
+ const r=await fetch(API,{method:'POST',body:JSON.stringify({code:S.code,name:S.name,pin:S.pin,...body})});
+ const d=await r.json();if(d.error==='kode')login('Kode kelas salah.');return d;
+}
+async function load(force){
+ if(!S.code||!S.name||API.startsWith('GANTI'))return;
+ try{
+  const r=await fetch(API+'?action=all&code='+encodeURIComponent(S.code)),d=await r.json();
+  if(d.error){login('Kode kelas salah.');return}
+  const j=JSON.stringify(d);if(j===S.last&&!force)return;S.last=j;
+  Object.assign(S,d);render();scrollChat();
+ }catch(e){}
+}
+const act=async b=>{const d=await post(b);if(d.error&&d.error!=='kode')alert(d.error==='izin'?'Kamu hanya bisa menghapus punyamu sendiri.':'Belum berhasil, coba lagi ya.');load(true);return d};
+
+function myReact(w){return S.reacts.find(r=>r.w===w&&same(r.name,S.name))||{}}
+function setReact(w,p){
+ const c=myReact(w),n={like:String(c.like)==='1',emoji:c.emoji||'',...p};
+ S.reacts=S.reacts.filter(r=>!(r.w===w&&same(r.name,S.name)));S.reacts.push({w,name:S.name,like:n.like?1:0,emoji:n.emoji});render();
+ act({action:'react',w,like:n.like,emoji:n.emoji});
+}
+const thumb=w=>'https://drive.google.com/thumbnail?id='+w.fileId+'&sz=w800';
+
+function card(w){
+ const rs=S.reacts.filter(r=>r.w===w.id),mine=myReact(w.id),likes=rs.filter(r=>String(r.like)==='1').length;
+ const cms=S.cms.filter(c=>c.w===w.id).sort((a,b)=>a.ts-b.ts),cat=CATS[w.cat]||CATS.lain;
+ const canDel=same(w.name,S.name)||isGuru();
+ const send=()=>{const t=S.draft[w.id]||'';if(!t.trim())return;S.draft[w.id]='';act({action:'comment',w:w.id,text:t})};
+ const el=h('div',{class:'card'},
+  h('div',{class:'prev'},h('img',{src:thumb(w),alt:w.title,loading:'lazy',onerror:e=>{const p=e.target.parentNode;p.replaceChildren(h('div',{class:'big'},cat[0]),h('div',{class:'mut'},w.fn))}})),
+  h('div',{class:'body'},
+   h('h3',null,w.title),
+   h('div',null,h('span',{class:'badge'},cat[0]+' '+cat[1]),h('span',{class:'mut'},'oleh '+w.name)),
+   w.desc?h('div',{class:'mut',style:'margin-top:4px'},w.desc):null,
+   h('div',{class:'row'},
+    h('button',{class:'btn alt'+(String(mine.like)==='1'?' on':''),onclick:()=>setReact(w.id,{like:String(mine.like)!=='1'})},(String(mine.like)==='1'?'❤️':'🤍')+' '+likes),
+    EM.map(e=>{const n=rs.filter(r=>r.emoji===e).length;return h('button',{class:'emo'+(mine.emoji===e?' on':''),onclick:()=>setReact(w.id,{emoji:mine.emoji===e?'':e})},e,n?h('small',null,n):null)})),
+   h('div',{class:'row'},
+    h('button',{class:'btn alt',onclick:()=>{S.open[w.id]=!S.open[w.id];render()}},'💬 '+cms.length+' komentar'),
+    h('a',{class:'btn alt',href:'https://drive.google.com/file/d/'+w.fileId+'/view',target:'_blank',rel:'noopener'},'👀 Buka'),
+    h('a',{class:'btn alt',href:'https://drive.google.com/uc?export=download&id='+w.fileId,target:'_blank',rel:'noopener'},'⬇️ Unduh'),
+    canDel?h('button',{class:'btn alt',onclick:()=>{if(S.del!==w.id){S.del=w.id;render();setTimeout(()=>{S.del=null;render()},4000)}else{S.del=null;act({action:'delete',kind:'work',id:w.id})}}},S.del===w.id?'Yakin hapus?':'🗑️'):null),
+   S.open[w.id]?h('div',{class:'cm'},
+    cms.map(c=>h('p',null,h('b',null,c.name+': '),c.text,(same(c.name,S.name)||isGuru())?h('button',{class:'x',onclick:()=>act({action:'delete',kind:'comment',id:c.id})},'✖'):null)),
+    h('div',{class:'row'},CE.map(e=>h('button',{class:'emo',onclick:()=>{const i=el.querySelector('input');i.value+=e;S.draft[w.id]=i.value;i.focus()}},e))),
+    h('div',{class:'row'},
+     h('input',{'data-w':w.id,placeholder:'Tulis komentar baik… 😊',maxlength:'200',value:S.draft[w.id]||'',oninput:e=>{S.draft[w.id]=e.target.value;S.focus=w.id},onkeydown:e=>{if(e.key==='Enter')send()}}),
+     h('button',{class:'btn',onclick:send},'Kirim'))):null));
+ return el;
+}
+function render(){
+ $('#who').textContent=S.name?'👤 '+S.name+(isGuru()?' (Guru)':'')+' · ganti':'';
+ $('#chips').replaceChildren(...[['all','🌈 Semua'],...Object.entries(CATS).map(([k,v])=>[k,v[0]+' '+v[1]])].map(([k,l])=>h('button',{class:'chip'+(S.filter===k?' on':''),onclick:()=>{S.filter=k;render()}},l)));
+ const list=S.works.filter(w=>S.filter==='all'||w.cat===S.filter).sort((a,b)=>b.ts-a.ts),g=$('#grid');
+ g.replaceChildren(...(list.length?list.map(card):[h('div',{class:'empty',style:'grid-column:1/-1'},'Belum ada karya. Yuk jadi yang pertama unggah! 🚀')]));
+ if(S.focus){const i=g.querySelector('[data-w="'+S.focus+'"]');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
+ $('#msgs').replaceChildren(...S.chat.sort((a,b)=>a.ts-b.ts).map(c=>h('div',{class:'m'+(same(c.name,S.name)?' me':'')},h('div',{class:'n'},same(c.name,S.name)?'Aku':c.name,isGuru()?h('button',{class:'x',onclick:()=>act({action:'delete',kind:'chat',id:c.id})},'✖'):null),c.text)));
+}
+function scrollChat(){const m=$('#msgs');m.scrollTop=m.scrollHeight}
+
+document.querySelectorAll('.tab[data-t]').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('.tab[data-t]').forEach(x=>x.classList.toggle('on',x===b));
+ $('#gal').classList.toggle('hide',b.dataset.t!=='gal');$('#chat').classList.toggle('hide',b.dataset.t!=='chat');$('#up').classList.toggle('hide',b.dataset.t!=='gal');
+ scrollChat();
+});
+$('#uc').append(...Object.entries(CATS).map(([k,v])=>h('option',{value:k},v[0]+' '+v[1])));
+CE.forEach(e=>$('#cemo').append(h('button',{class:'emo',onclick:()=>{$('#ci').value+=e;$('#ci').focus()}},e)));
+const sendChat=()=>{const t=$('#ci').value.trim();if(!t)return;$('#ci').value='';act({action:'chat',text:t})};
+$('#cs').onclick=sendChat;$('#ci').onkeydown=e=>{if(e.key==='Enter')sendChat()};
+
+function login(msg){$('#ls').textContent=msg||'';$('#ln').value=S.name;$('#lc').value=S.code;$('#lp').value=S.pin;if(!$('#dl').open)$('#dl').showModal()}
+$('#who').onclick=()=>login();
+$('#lok').onclick=async()=>{
+ const n=$('#ln').value.trim(),c=$('#lc').value.trim();
+ if(!n||!c){$('#ls').textContent='Isi nama dan kode kelas dulu ya. 😊';return}
+ S.name=n;S.code=c;S.pin=$('#lp').value.trim();L.kk_name=n;L.kk_code=c;L.kk_pin=S.pin;
+ try{const d=await (await fetch(API+'?action=all&code='+encodeURIComponent(c))).json();
+  if(d.error){$('#ls').textContent='Kode kelas salah.';return}}catch(e){$('#ls').textContent='Tidak bisa terhubung. Periksa internet / URL Web App.';return}
+ $('#dl').close();S.last='';load(true);
+};
+
+$('#up').onclick=()=>{$('#us').textContent='';$('#dlg').showModal()};
+$('#ux').onclick=()=>$('#dlg').close();
+$('#uf').onchange=e=>{
+ const f=e.target.files[0];if(!f)return;const n=f.name.toLowerCase();
+ if(/\.docx?$/.test(n))$('#uc').value='word';else if(/\.(xlsx?|csv)$/.test(n))$('#uc').value='excel';else if(/\.pptx?$/.test(n))$('#uc').value='ppt';else if(f.type.startsWith('image/'))$('#uc').value='poster';
+ if(!$('#ut').value)$('#ut').value=f.name.replace(/\.[^.]+$/,'');
+};
+$('#usend').onclick=async()=>{
+ const f=$('#uf').files[0],t=$('#ut').value.trim(),st=$('#us');
+ if(!t||!f){st.textContent='Isi judul dan pilih file dulu ya. 😊';return}
+ if(f.size>10*1024*1024){st.textContent='File terlalu besar (maks 10 MB). Kecilkan dulu ya.';return}
+ st.textContent='Sedang mengunggah… ⏳';$('#usend').disabled=true;
+ try{
+  const data=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result.split(',')[1]);r.onerror=no;r.readAsDataURL(f)});
+  const d=await post({action:'upload',title:t,cat:$('#uc').value,desc:$('#ud').value.trim(),fn:f.name,mime:f.type||'application/octet-stream',data});
+  if(d.error)throw 0;
+  $('#ut').value='';$('#ud').value='';$('#uf').value='';st.textContent='';$('#dlg').close();load(true);
+ }catch(e){st.textContent='Belum berhasil. Coba lagi ya. 🙏'}
+ $('#usend').disabled=false;
+};
+
+if(API.startsWith('GANTI')){$('#grid').append(h('div',{class:'empty',style:'grid-column:1/-1'},'Aplikasi belum disambungkan. Isi URL Web App di index.html (lihat README).'))}
+else if(!S.name||!S.code)login();
+render();load();
+setInterval(()=>{if(!document.hidden&&!document.querySelector('dialog[open]'))load()},6000);
+</script>
+</body>
+</html>
